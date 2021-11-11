@@ -5,6 +5,7 @@ src = 0
 dest = 0
 numOfCalls = 0
 status = 0
+waitingTime = 0
 
 class Call:
     def __init__(self, file, callNumber):
@@ -29,3 +30,5 @@ class Call:
             self.status = -1
         elif (dest > src):
             self.status = 1
+
+        self.allocatedTo = 0
