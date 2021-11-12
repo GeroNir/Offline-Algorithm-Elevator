@@ -3,9 +3,11 @@ import sys
 import Building
 import Call
 import copy
+import numpy as np
 
 
 def timeForList(e):
+    tmpCalls = [row[:] for row in calls]
     floorTime = e['_openTime'] + e['_closeTime'] + e['_startTime'] + e['_stopTime']
     speed = e['_speed']
     total = 0
@@ -15,8 +17,11 @@ def timeForList(e):
     return total
 
 
+
+
 def calculateTime(tmpCall, e, currTime):
     # TODO: copy the list or remove the rest
+    tmpCalls = [row[:] for row in calls]
     floorTime = e['_openTime'] + e['_closeTime'] + e['_startTime'] + e['_stopTime']
     speed = e['_speed']
     currElev = e['_id']
@@ -85,8 +90,9 @@ def calculateTime(tmpCall, e, currTime):
 
 
 class OfflineAlgo:
+    # todo: initialize the lists with the parm of calls and eletaors
     global calls
-    calls = [[], []]
+    calls = [[],[]]
     global tmpCalls
     tmpCalls = [[], []]
     call_file = 'Ex1_input/Ex1_Calls/Calls_a.csv'
@@ -126,7 +132,7 @@ class OfflineAlgo:
         else:
             f = open('C:/Users/Hagai/PycharmProjects/OOP_course/newfile.csv', 'a', newline='')
             writer = csv.writer(f)
-            row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, tmpCall.allocatedTo, e['_id']]
+            row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, tmpCall.allocatedTo]
             writer.writerow(row)
             f.close()
 
