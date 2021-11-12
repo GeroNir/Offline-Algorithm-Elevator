@@ -1,38 +1,27 @@
 import csv
 import sys
-
 import Building
 import Call
 
 calls = [[], []]
 tmpCalls = [[], []]
 
-'''
-def calculateTime2(tmpCall, e):
-    floorTime = e['_openTime'] + e['_closeTime'] + e['_startTime'] + e['_stopTime']
-    speed = e['_speed']
-    src = tmpCall.src
-    dest = tmpCall.dest
-    tmpUpCalls = upCalls
-    tmpDownCalls = downCalls
-    if(timeline.__getitem__(len(timeline)) < tmpCall.time):
-        callTime = tmpCall.time + abs( + abs((tmpCall.src - tmpCall.dest)/speed)
-        timeline.append(callTime)
-'''
 
-
-def timeForList(currElev, e):
+def timeForList(e):
     floorTime = e['_openTime'] + e['_closeTime'] + e['_startTime'] + e['_stopTime']
     speed = e['_speed']
     total = 0
+    currElev = e['_id']
     for c in range(len(tmpCalls[currElev]) - 1):
         total = total + (abs(int(tmpCalls[currElev][c + 1]) - int(tmpCalls[currElev][c])) / speed) + floorTime
     return total
 
 
-def calculateTime(tmpCall, e, currTime, currElev):
+def calculateTime(tmpCall, e, currTime):
+
     floorTime = e['_openTime'] + e['_closeTime'] + e['_startTime'] + e['_stopTime']
     speed = e['_speed']
+    currElev = e['_id']
     src = int(tmpCall.src)
     dest = int(tmpCall.dest)
     total = 0
@@ -66,8 +55,8 @@ def calculateTime(tmpCall, e, currTime, currElev):
         tmpCalls[currElev].insert(index, tmpCall.src)
         print(tmpCalls)
 
-        total = 0
         # find the best insert for dest
+        total = 0
         for c in range(1, len(tmpCalls[currElev]) + 1):
             total = total + (abs(int(tmpCalls[currElev][c - 1]) - int(tmpCalls[currElev][c])) / speed) + floorTime
             endTime = total + currTime
@@ -117,10 +106,10 @@ class OfflineAlgo:
         minTime = sys.float_info.max
         print(tmpCalls)
         for e in b.Elevators:
-            elevTime = calculateTime(tmpCall, e, currTime, i)
+            elevTime = calculateTime(tmpCall, e, currTime)
             if (elevTime < minTime):
                 minTime = elevTime
-                index = i
+                index = e['_id']
                 print(minTime)
             i += 1
 
@@ -129,7 +118,12 @@ class OfflineAlgo:
     if (numOfElev == 1):
         f = open('C:/Users/Hagai/PycharmProjects/OOP_course/newfile.csv', 'a', newline='')
         writer = csv.writer(f)
-        row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, tmpCall.allocatedto, e['_id']]
+        row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, e['_id']]
         writer.writerow(row)
         f.close()
-    print(tmpCalls)
+    else:
+        f = open('C:/Users/Hagai/PycharmProjects/OOP_course/newfile.csv', 'a', newline='')
+        writer = csv.writer(f)
+        row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, tmpCall.allocatedTo, e['_id']]
+        writer.writerow(row)
+        f.close()
