@@ -2,8 +2,6 @@ import csv
 import sys
 import Building
 import Call
-import copy
-import numpy as np
 
 
 def timeForList(e):
@@ -17,8 +15,6 @@ def timeForList(e):
     return total
 
 
-
-
 def calculateTime(tmpCall, e, currTime):
     # TODO: copy the list or remove the rest
     tmpCalls = [row[:] for row in calls]
@@ -28,59 +24,57 @@ def calculateTime(tmpCall, e, currTime):
     src = int(tmpCall.src)
     dest = int(tmpCall.dest)
     total = 0
-
+    timeBeforeAdd = timeForList(e)
+    index = len(tmpCalls[currElev])
     if (len(tmpCalls[currElev]) > 0):
-        for c in range(1, len(tmpCalls[currElev]) + 1):
+        for c in range(1, len(tmpCalls[currElev])):
             total = total + (abs(int(tmpCalls[currElev][c - 1]) - int(tmpCalls[currElev][c])) / speed) + floorTime
             endTime = total + currTime
-            if (endTime < float(tmpCall.time)):
-                index = c + 1
+            if (endTime > float(tmpCall.time)):
+                index = c
                 break
 
-        if (index == len(tmpCalls[currElev])):
-            minTimeSrc = endTime
-        else:
-            minTimeSrc = sys.float_info.max
-        print(minTimeSrc)
 
-        for i in range(index, len(tmpCalls[currElev])+1):
+        minTimeSrc = timeForList(e) + currTime
+        #print(minTimeSrc)
+
+        for i in range(index, len(tmpCalls[currElev])):
             tmpCalls[currElev].insert(i, tmpCall.src)
-            print(tmpCalls)
+            #print(tmpCalls)
             totalTime = timeForList(e) + currTime
             if (totalTime < minTimeSrc):
                 minTimeSrc = totalTime
                 index = i
             del tmpCalls[currElev][i]
-        print(tmpCalls)
+        #print(tmpCalls)
         tmpCalls[currElev].insert(index, tmpCall.src)
-        print(tmpCalls)
+        #print(tmpCalls)
         indxSrc = index
         # find the best insert for dest
         total = 0
+        index = len(tmpCalls[currElev])
         for c in range(index, len(tmpCalls[currElev])):
             total = total + (abs(int(tmpCalls[currElev][c - 1]) - int(tmpCalls[currElev][c])) / speed) + floorTime
             endTime = total + currTime
-            if (endTime < float(tmpCall.time)):
-                index = c + 1
+            if (endTime > float(tmpCall.time)):
+                index = c
                 break
 
-        if (index == len(tmpCalls[currElev])):
-            minTimeDest = endTime
-        else:
-            minTimeDest = sys.float_info.max
+
+        minTimeDest = timeForList(e) + currTime
 
         for i in range(index, len(tmpCalls[currElev]) + 1):
             tmpCalls[currElev].insert(i, tmpCall.dest)
-            print(tmpCalls)
+            #print(tmpCalls)
             totalTime = timeForList(e) + currTime
             if (totalTime < minTimeDest):
                 minTimeDest = totalTime
                 index = i
             del tmpCalls[currElev][i]
-        print(tmpCalls)
+        #print(tmpCalls)
         tmpCalls[currElev].insert(index, tmpCall.dest)
-        print(tmpCalls)
-        return minTimeDest + minTimeSrc,indxSrc, index
+        #print(tmpCalls)
+        return minTimeDest + minTimeSrc-timeBeforeAdd,indxSrc, index
 
     else:
         tmpCalls[currElev].append(tmpCall.src)
@@ -92,11 +86,11 @@ def calculateTime(tmpCall, e, currTime):
 class OfflineAlgo:
     # todo: initialize the lists with the parm of calls and eletaors
     global calls
-    calls = [[],[]]
+    calls = [[],[],[],[],[],[],[],[],[],[]]
     global tmpCalls
-    tmpCalls = [[], []]
-    call_file = 'Ex1_input/Ex1_Calls/Calls_a.csv'
-    building_file = 'Ex1_input/Ex1_Buildings/B2.json'
+    tmpCalls = [[],[],[],[],[],[],[],[],[],[]]
+    call_file = 'Ex1_input/Ex1_Calls/Calls_d.csv'
+    building_file = 'Ex1_input/Ex1_Buildings/B4.json'
     numOfCalls = Call.Call(call_file, 1).numOfCalls
     numOfElev = Building.Building(building_file).numOfElevators
     b = Building.Building(building_file)
@@ -113,14 +107,14 @@ class OfflineAlgo:
             if (elevTime < minTime):
                 minTime = elevTime
                 index = e['_id']
-                print(minTime)
+                #print(minTime)
             i += 1
 
         tmpCall.allocatedTo = index
-        print(calls)
+        #print(calls)
         calls[index].insert(indxSrc,tmpCall.src)
         calls[index].insert(indxDest, tmpCall.dest)
-        print(calls)
+        #print(calls)
         # todo: fix the insert (duplicates)
 
         if (numOfElev == 1):
