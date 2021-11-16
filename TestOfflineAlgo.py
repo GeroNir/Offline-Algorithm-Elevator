@@ -9,20 +9,6 @@ from csv import reader
 
 class Test(unittest.TestCase):
 
-    def testRandomCase(self):
-        calls_file = 'Ex1_input/Ex1_Calls/Calls_b.csv'
-        building_file = 'Ex1_input/Ex1_Buildings/B5.json'
-        b = Building.Building(building_file)
-        numOfElev = b.numOfElevators
-        f = open('C:/Users/Hagai/PycharmProjects/OOP_course/rndFile.csv', 'a', newline='')
-        for i in range(1, 1001):
-            tmpCall = Call.Call(calls_file, i)
-            writer = csv.writer(f)
-            row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, random.randint(0, numOfElev)]
-            writer.writerow(row)
-        f.close()
-        OfflineAlgo.allocateElev(building_file, calls_file, 'csvFile.csv')
-
     def testBuilding(self):
         building_file = 'Ex1_input/Ex1_Buildings/B5.json'
         b = Building.Building(building_file)
