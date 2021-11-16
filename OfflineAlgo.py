@@ -81,6 +81,7 @@ def calculateTime(tmpCall, e, currTime, startIndx):
         return total + currTime, 0, 1, startIndx
 
 
+# This function roll all over the calls and the elevators, and find for every call the fastest elevator
 def allocateElev(Building_file, Calls_file, Calls_out):
     start = time.time()
     numOfCalls = Call.Call(Calls_file, 1).numOfCalls
@@ -101,7 +102,7 @@ def allocateElev(Building_file, Calls_file, Calls_out):
     f = open(Calls_out, 'w', newline='')
     currTime = int(float(Call.Call(Calls_file, 1).time)) + 1
     for c in range(1,
-                   numOfCalls + 1):  # This loop roll all over the calls and the elevators, and find for every call the fastest elevator
+                   numOfCalls + 1):
         tmpCall = Call.Call(Calls_file, c)
         i = 0
         src = int(tmpCall.src)
