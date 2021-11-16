@@ -28,9 +28,9 @@ class Call:
             csv_reader = csv.reader(csv_file, delimiter=',')
             row_count = sum(1 for row in csv_reader)
             self.numOfCalls = row_count
-        if (src > dest):
+        if (self.src > self.dest):
             self.status = -1
-        elif (dest > src):
+        elif (self.dest > self.src):
             self.status = 1
 
         self.allocatedTo = 0

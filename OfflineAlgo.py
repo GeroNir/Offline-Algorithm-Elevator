@@ -80,7 +80,7 @@ def calculateTime(tmpCall, e, currTime, startIndx):
         total = (abs(src - dest) / speed) + floorTime
         return total + currTime, 0, 1, startIndx
 
-    # TODO: initialize the lists with the parm of calls and eletaors
+    # TODO: initialize the lists with the parm of calls and elevators
 
 
 def allocateElev(Building_file, Calls_file, Calls_out):
@@ -88,17 +88,19 @@ def allocateElev(Building_file, Calls_file, Calls_out):
     numOfCalls = Call.Call(Calls_file, 1).numOfCalls
     b = Building.Building(Building_file)
     global calls
-    calls = [[], [], [], [], [], [], [], [], [], []]
+    calls = []
     global tmpCalls
-    tmpCalls = [[], [], [], [], [], [], [], [], [], []]
+    tmpCalls = []
     fastestSpeed = b.Elevators[0]['_speed']
     fastElevID = 0
     startIndx = 1
     for e in b.Elevators:  # This loop find the fastest elevator
+        calls.insert(0, [])
+        tmpCalls.insert(0, [])
         if e['_speed'] > fastestSpeed:
             fastElevID = e['_id']
             fastestSpeed = e['_speed']
-    f = open(Calls_out, 'a', newline='')
+    f = open(Calls_out, 'w', newline='')
     currTime = int(float(Call.Call(Calls_file, 1).time)) + 1
     for c in range(1,
                    numOfCalls + 1):  # This loop roll all over the calls and the elevators, and find for every call the fastest elevator

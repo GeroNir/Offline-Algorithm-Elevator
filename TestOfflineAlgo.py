@@ -3,83 +3,77 @@ import Call
 import csv
 import random
 import OfflineAlgo
+import Building
+from csv import reader
+
 
 class Test(unittest.TestCase):
-    def testRandomCase(self):
-        call_file = 'Ex1_input/Ex1_Calls/Calls_b.csv'
-        f = open('C:/Users/Hagai/PycharmProjects/OOP_course/rndFile.csv', 'a', newline='')
 
+    def testRandomCase(self):
+        calls_file = 'Ex1_input/Ex1_Calls/Calls_b.csv'
+        building_file = 'Ex1_input/Ex1_Buildings/B5.json'
+        b = Building.Building(building_file)
+        numOfElev = b.numOfElevators
+        f = open('C:/Users/Hagai/PycharmProjects/OOP_course/rndFile.csv', 'a', newline='')
         for i in range(1, 1001):
-            tmpCall = Call.Call(call_file, i)
+            tmpCall = Call.Call(calls_file, i)
             writer = csv.writer(f)
-            row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, random.randint(0, 4)]
+            row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, random.randint(0, numOfElev)]
             writer.writerow(row)
         f.close()
+        OfflineAlgo.allocateElev(building_file, calls_file, 'csvFile.csv')
 
-'''
-tmpCall = Call('Ex1_input/Ex1_Calls/Calls_a.csv', 3)
-print(tmpCall.time)
-print(tmpCall.numOfCalls)
+    def testBuilding(self):
+        building_file = 'Ex1_input/Ex1_Buildings/B5.json'
+        b = Building.Building(building_file)
+        self.assertEqual(10, b.numOfElevators)
+        self.assertEqual(-10, b.minFloor)
+        self.assertEqual(100, b.maxFloor)
 
-#run from command line Using sys
-# def hello(a,b):
-#     print ("hello and that's your sum:", a + b)
-#
-# if __name__ == "__main__":
-#     a = int(sys.argv[1])
-#     b = int(sys.argv[2])
-#     hello(a, b)
+    def testCall(self):
+        calls_file = 'Ex1_input/Ex1_Calls/Calls_c.csv'
+        call = Call.Call(calls_file, 1)
+        self.assertEqual(1000, call.numOfCalls)
+        self.assertEqual(-6, int(call.src))
+        self.assertEqual(78, int(call.dest))
+        self.assertEqual(1, int(call.status))
+        self.assertEqual(1, int(call.id))
 
+    def testAllocationRight(self):
+        # check That all the allocation is not equal to -1
+        calls_file = 'Ex1_input/Ex1_Calls/Calls_b.csv'
+        building_file = 'Ex1_input/Ex1_Buildings/B5.json'
+        b = Building.Building(building_file)
+        isRight = True
+        OfflineAlgo.allocateElev(building_file, calls_file, 'out.csv')
+        with open('out.csv', 'r') as read_obj:
+            csv_reader = reader(read_obj)
+            for row in csv_reader:
+                if (row[5] == -1):
+                    isRight = False
+        self.assertTrue(isRight)
 
-# open the file in the write mode
-f = open('C:/Users/Hagai/PycharmProjects/OOP_course/new1.csv', 'a')
-
-# create the csv writer
-writer = csv.writer(f)
-
-# write a row to the csv file
-list = ['this', 'is']
-writer.writerow(list)
-
-# close the file
-f.close()
-
-
-import Building as b
-b1 = b.Building('Ex1_input/Ex1_Buildings/B1.json')
-print("MinFloor is: ", b1.minFloor)
-print(b1.Elevators[0]['_id'])
-print(b1.Elevators)
-print(b1.numOfElevators)
-
-# import json
-#
-# with open('Ex1_input/Ex1_Buildings/B2.json') as b1:
-#     data = json.load(b1)
-# print(data['_minFloor'])
-
-list = [3, 5, 7]
-for floor in range(len(list)-1):
-    print(list.__getitem__(floor+1) - list.__getitem__(floor))
-
-
-
-list = [[], []]
-list[0].append(4)
-list[1].append(4)
-print(list)
-del list [0][0]
-print(list)
-
-
-call_file = 'Ex1_input/Ex1_Calls/Calls_b.csv'
-f = open('C:/Users/Hagai/PycharmProjects/OOP_course/rndFile.csv', 'a', newline='')
-
-for i in range(1,1001):
-    tmpCall = Call.Call(call_file, i)
-    writer = csv.writer(f)
-    row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, random.randint(0,4)]
-    writer.writerow(row)
-
-f.close()
-'''
+    def testAllocationWrong(self):
+        # Writing a wrong CSV file (with a -1 in the allocation)
+        calls_file = 'Ex1_input/Ex1_Calls/Calls_a.csv'
+        building_file = 'Ex1_input/Ex1_Buildings/B5.json'
+        b = Building.Building(building_file)
+        numOfElev = b.numOfElevators
+        f = open('wrongCSV.csv', 'a', newline='')
+        for i in range(1, 101):
+            tmpCall = Call.Call(calls_file, i)
+            writer = csv.writer(f)
+            if (i != 5):
+                row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, random.randint(0, numOfElev - 1)]
+            else:
+                row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, -1]
+            writer.writerow(row)
+        f.close()
+        # check this wrong file
+        isRight = True
+        with open('wrongCSV.csv', 'r') as read_obj:
+            csv_reader = reader(read_obj)
+            for row in csv_reader:
+                if (int(row[5]) == -1):
+                    isRight = False
+        self.assertFalse(isRight)
