@@ -80,8 +80,6 @@ def calculateTime(tmpCall, e, currTime, startIndx):
         total = (abs(src - dest) / speed) + floorTime
         return total + currTime, 0, 1, startIndx
 
-    # TODO: initialize the lists with the parm of calls and elevators
-
 
 def allocateElev(Building_file, Calls_file, Calls_out):
     start = time.time()
