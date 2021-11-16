@@ -25,8 +25,6 @@ def calculateTime(tmpCall, e, currTime, startIndx):
     dest = int(tmpCall.dest)
     total = 0
     timeBeforeAdd = timeForList(e) + currTime
-    numOfCalls = tmpCall.numOfCalls
-    currCall = tmpCall.id
     index = len(tmpCalls[currElev])
     if (len(tmpCalls[currElev]) > 0):
         for c in range(startIndx, len(tmpCalls[currElev])):
@@ -35,23 +33,20 @@ def calculateTime(tmpCall, e, currTime, startIndx):
             if (endTime > float(tmpCall.time)):
                 index = c
                 startIndx = c
-                # break
 
         minTimeSrc = timeForList(e) + currTime
-        # print(minTimeSrc)
 
         for i in range(index, int(len(tmpCalls[currElev]) - index / 2)):
             tmpCalls[currElev].insert(i, tmpCall.src)
-            # print(tmpCalls)
             totalTime = timeForList(e) + currTime
             if (totalTime < minTimeSrc):
                 minTimeSrc = totalTime
                 index = i
             del tmpCalls[currElev][i]
-        # print(tmpCalls)
         tmpCalls[currElev].insert(index, tmpCall.src)
-        # print(tmpCalls)
         indxSrc = index
+
+
         # find the best insert for dest
         total = 0
         index = len(tmpCalls[currElev])
@@ -60,7 +55,6 @@ def calculateTime(tmpCall, e, currTime, startIndx):
             endTime = total + currTime
             if (endTime > float(tmpCall.time)):
                 index = c
-                # break
         minTimeDest = timeForList(e) + currTime
 
         for i in range(index, int(len(tmpCalls[currElev]) - index / 2)):
@@ -71,9 +65,7 @@ def calculateTime(tmpCall, e, currTime, startIndx):
                 minTimeDest = totalTime
                 index = i
             del tmpCalls[currElev][i]
-        # print(tmpCalls)
         tmpCalls[currElev].insert(index, tmpCall.dest)
-        # print(tmpCalls)
         return minTimeDest + minTimeSrc - timeBeforeAdd, indxSrc, index, startIndx
 
     else:
@@ -89,7 +81,6 @@ def allocateElev(Building_file, Calls_file, Calls_out):
     start = time.time()
     numOfCalls = Call.Call(Calls_file, 1).numOfCalls
     b = Building.Building(Building_file)
-    numOfElev = b.numOfElevators
     global calls
     calls = [[], [], [], [], [], [], [], [], [], []]
     global tmpCalls
