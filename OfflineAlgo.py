@@ -82,63 +82,7 @@ def calculateTime(tmpCall, e, currTime, startIndx):
         total = (abs(src - dest) / speed) + floorTime
         return total + currTime, 0, 1, startIndx
 
-    # TODO: run from command line
     # TODO: initialize the lists with the parm of calls and eletaors
-
-
-'''
-    call_file = 'Ex1_input/Ex1_Calls/Calls_d.csv'
-    building_file = 'Ex1_input/Ex1_Buildings/B3.json'
-    numOfCalls = Call.Call(call_file, 1).numOfCalls
-    numOfElev = Building.Building(building_file).numOfElevators
-    b = Building.Building(building_file)
-    global calls
-    calls = [[], [], [], [], [], [], [], [], [], []]
-    global tmpCalls
-    tmpCalls = [[], [], [], [], [], [], [], [], [], []]
-    fastestSpeed = b.Elevators[0]['_speed']
-    fastElevID = 0
-    startIndx = 1
-    for e in b.Elevators:
-        if e['_speed'] > fastestSpeed:
-            fastElevID = e['_id']
-            fastestSpeed = e['_speed']
-    f = open('C:/Users/Hagai/PycharmProjects/OOP_course/newfile.csv', 'a', newline='')
-    currTime = int(float(Call.Call(call_file, 1).time)) + 1
-    for c in range(1, numOfCalls + 1):
-        tmpCall = Call.Call(call_file, c)
-        i = 0
-        src = int(tmpCall.src)
-        dest = int(tmpCall.dest)
-        minTime = sys.float_info.max
-        index = 0
-        print(c)
-        for e in b.Elevators:
-            elevTime, indxSrc, indxDest, startIndx = calculateTime(tmpCall, e, currTime, startIndx)
-            if (e['_id'] == fastElevID and abs(src-dest) >= (b.maxFloor - b.minFloor + 1)/2):
-                if (elevTime < minTime):
-                    minTime = elevTime
-                    index = e['_id']
-                # print(minTime)
-            elif (e['_id'] != fastElevID):
-                if (elevTime < minTime):
-                    minTime = elevTime
-                    index = e['_id']
-            i += 1
-
-
-        tmpCall.allocatedTo = index
-        # print(calls)
-        calls[index].insert(indxSrc, tmpCall.src)
-        calls[index].insert(indxDest, tmpCall.dest)
-        # print(calls)
-
-
-        writer = csv.writer(f)
-        row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, tmpCall.allocatedTo]
-        writer.writerow(row)
-    f.close()
-'''
 
 
 def allocateElev(Building_file, Calls_file, Calls_out):
@@ -172,7 +116,6 @@ def allocateElev(Building_file, Calls_file, Calls_out):
                 if (elevTime < minTime):
                     minTime = elevTime
                     index = e['_id']
-                # print(minTime)
             elif (e['_id'] != fastElevID):
                 if (elevTime < minTime):
                     minTime = elevTime
@@ -180,10 +123,8 @@ def allocateElev(Building_file, Calls_file, Calls_out):
             i += 1
 
         tmpCall.allocatedTo = index
-        # print(calls)
         calls[index].insert(indxSrc, tmpCall.src)
         calls[index].insert(indxDest, tmpCall.dest)
-        # print(calls)
 
         writer = csv.writer(f)
         row = ['Elevator call', tmpCall.time, tmpCall.src, tmpCall.dest, 0, tmpCall.allocatedTo]
