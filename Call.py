@@ -1,16 +1,17 @@
 import csv
 
-time = 0
-src = 0
-dest = 0
-numOfCalls = 0
-status = 0
-waitingTime = 0
-id = 0
-
 class Call:
-    def __init__(self, file, callNumber):
 
+    time = 0
+    src = 0
+    dest = 0
+    numOfCalls = 0
+    status = 0
+    waitingTime = 0
+    id = 0
+
+    # This constructor read from the csv file the relevant details by his number
+    def __init__(self, file, callNumber):
         with open(file) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             line_count = 1

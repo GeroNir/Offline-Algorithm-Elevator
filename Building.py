@@ -8,6 +8,7 @@ class Building:
     Elevators = ['']
     numOfElevators = 0
 
+    # This constructor read from the json file the relevant details
     def __init__(self, file):
         with open(file) as b1:
             data = json.load(b1)
